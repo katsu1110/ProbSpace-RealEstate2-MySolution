@@ -9,3 +9,4 @@ catboost_info/
 *.pkl
 wheels/
 .env
+.history
