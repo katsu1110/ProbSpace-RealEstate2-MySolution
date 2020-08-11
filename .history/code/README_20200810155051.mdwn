@@ -1,0 +1,9 @@
+# My Solution to ProbSpace Real State Price Prediction Challenge 2
+
+The competition URL is [here](https://prob.space/competitions/re_real_estate_2020).
+
+## Solution Summary
+
+- Features : some one-hot features (e.g. 'usage'), 'is_nan' as a feature, etc but no 'published_land_price.csv'
+- Model : stacking ensemble of GBDTs (LightGBM, XGBoost, CatBoost) and NN (MLP), using Bayesian Ridge
+

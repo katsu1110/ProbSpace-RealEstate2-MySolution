@@ -1,0 +1,21 @@
+# My Solution to ProbSpace Real State Price Prediction Challenge 2
+
+I thank organizers for hosting this great tabular data science competition.
+
+The competition URL is [here](https://prob.space/competitions/re_real_estate_2020).
+
+## Result
+Public, Private
+
+## Solution Summary
+
+- Features : some one-hot features (e.g. 'usage'), 'is_nan' as a feature, etc without use of ```published_land_price.csv```.
+- Validation Strategy: KFold with shuffle=True. 
+- Model : stacking ensemble of GBDTs (LightGBM, XGBoost, CatBoost) and NN (MLP), using Bayesian Ridge.
+- ['Leaked data'](https://prob.space/competitions/re_real_estate_2020/discussions/masato8823-Post9982d5b9dcd6a33111e0) were used for both training and submission.
+
+As the evaluation metric is RMSLE, the target values were converted into pseudo-normal by taking ```np.log1p```. The predicted values were converted back by taking ```np.expm1```.
+
+Train and test were split by '取引時点', so blindly using this variable for modeling exploded some predictions (in my case). Eventually I binned this variable so that data >= 2015 has the same value (including all test data). 
+
+Seed average was used for some light-models to stabilize their performances. 

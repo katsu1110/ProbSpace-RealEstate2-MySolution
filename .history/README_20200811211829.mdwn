@@ -1,0 +1,26 @@
+# ProbSpace Real State Price Prediction Challenge 2
+
+リアルなテーブルデータを用いたコンペを開催してくださったProbspace様に感謝いたします。
+
+コンペURLは [here](https://prob.space/competitions/re_real_estate_2020)。
+
+## 結果
+Public: 0.26099（7位）, Private: 0.26221（8位）
+
+## 解法概要
+
+- 特徴量 : よく出てくる日本語はフラグにして使用 (e.g. 'usage'), 欠損自体に意味がある気がしたので'is_nan' as a feature, など（スコア改善しなかったので```published_land_price.csv```は使ってないです）
+- Validation Strategy: KFold with shuffle=True. 
+- Model : LightGBMシングル
+- ['Leaked data'](https://prob.space/competitions/re_real_estate_2020/discussions/masato8823-Post9982d5b9dcd6a33111e0)は訓練に使用し、提出時に値を置き換えました.
+
+評価指標はRMSLEだったので, ターゲットは```np.log1p```で変換し、予測値を```np.expm1```で戻しました.
+
+Train、testは'取引時点'で分かれていたので、分布がTrainとtestが被ってなかったのですが、何も考えずそのまま入れた方がスコアはよかったです。
+シードによって予測が結構ぶれるので、3回seed averageしたものを提出しました。
+
+## 謎
+
+- テーブルデータだったのでNNとGBDTのstackingが絶対効くじゃんと思っていたが、Overfitしただけだった。
+- NN (MLP)が雑魚すぎた（欠損値が多すぎてうまく学習させられなかった？）。
+- XGB、LGBは良かったが、CatBoostは、取引時点をそのまま使うと予測値がふっとんだ（「（2000万くらいの家に）この家60億円〜！！！」）
